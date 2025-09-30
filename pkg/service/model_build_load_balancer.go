@@ -27,6 +27,7 @@ import (
 	"sigs.k8s.io/aws-load-balancer-controller/pkg/shared_utils"
 )
 
+// Abstract this out??
 const (
 	resourceIDLoadBalancer                     = "LoadBalancer"
 	lbAttrsAccessLogsS3Enabled                 = "access_logs.s3.enabled"
