@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strconv"
 
+	"sigs.k8s.io/aws-load-balancer-controller/pkg/shared_constants"
+
 	awssdk "github.com/aws/aws-sdk-go-v2/aws"
 	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/pkg/errors"
@@ -22,12 +24,19 @@ import (
 	"sigs.k8s.io/aws-load-balancer-controller/pkg/model/core"
 	elbv2model "sigs.k8s.io/aws-load-balancer-controller/pkg/model/elbv2"
 	"sigs.k8s.io/aws-load-balancer-controller/pkg/networking"
-	"sigs.k8s.io/aws-load-balancer-controller/pkg/shared_constants"
 	"sigs.k8s.io/aws-load-balancer-controller/pkg/shared_utils"
 )
 
 const (
-	resourceIDLoadBalancer = "LoadBalancer"
+	resourceIDLoadBalancer                     = "LoadBalancer"
+	lbAttrsAccessLogsS3Enabled                 = "access_logs.s3.enabled"
+	lbAttrsAccessLogsS3Bucket                  = "access_logs.s3.bucket"
+	lbAttrsAccessLogsS3Prefix                  = "access_logs.s3.prefix"
+	lbAttrsLoadBalancingCrossZoneEnabled       = "load_balancing.cross_zone.enabled"
+	lbAttrsLoadBalancingDnsClientRoutingPolicy = "dns_record.client_routing_policy"
+	availabilityZoneAffinity                   = "availability_zone_affinity"
+	partialAvailabilityZoneAffinity            = "partial_availability_zone_affinity"
+	anyAvailabilityZone                        = "any_availability_zone"
 )
 
 func (t *defaultModelBuildTask) buildLoadBalancer(ctx context.Context, scheme elbv2model.LoadBalancerScheme) error {
@@ -39,7 +48,7 @@ func (t *defaultModelBuildTask) buildLoadBalancer(ctx context.Context, scheme el
 	if err != nil {
 		return err
 	}
-	t.loadBalancer = elbv2model.NewLoadBalancer(t.stack, resourceIDLoadBalancer, spec)
+	t.loadBalancer = elbv2model.NewLoadBalancer(t.stack, shared_constants.ResourceIDLoadBalancer, spec)
 	return nil
 }
 
